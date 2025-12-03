@@ -1,17 +1,108 @@
-1 - Criar a chave da api do chatgpt
-    1.1 - Acessar a plataforma da OpenAi: https://platform.openai.com/docs/overview e faça o login
-    1.2 - Acesse https://platform.openai.com/docs/api-reference/introduction
-    1.3 - Depois https://platform.openai.com/settings/organization/api-keys e gere uma chave de Api.
+## 📌 1. Visão Geral
 
-2 - Criar o token da api do whatsApp
-    2.1 - Acesse https://developers.facebook.com/apps/
-    2.2 - Siga o passo a passo de configuração da chave https://www.youtube.com/watch?v=Bmk_LvI9nkA
+Este backend foi desenvolvido para processar arquivos PDF, extrair o texto, gerar um relatório automático usando a API da OpenAI (ChatGPT) e enviar o resultado tanto por **e-mail (via Nodemailer)** quanto por **WhatsApp (via Meta WhatsApp Cloud API)**.
 
-3 - Criar a chave de app no gmail
-    3.1 - Acesse as configurações do gmail https://myaccount.google.com/
-    3.2 - Pesquise por password app e acesse https://myaccount.google.com/apppasswords
-    3.3 - Crie uma chave e salve ela
+Ele funciona em conjunto com o front-end disponível em:
+👉 **[https://github.com/RomuloLB28/gerador-de-relatorio-usando-chatgpt-front](https://github.com/RomuloLB28/gerador-de-relatorio-usando-chatgpt-front)**
 
-4 - Finalização
-    4.1 - Abra os repositorios e substitua as credenciais no backend
-    4.2 - Abra o terminal de ambos(front e back) e execute npm run
+---
+
+## 🧠 2. Fluxo de Funcionamento
+
+1. O usuário envia um arquivo PDF + email + telefone pelo front-end.
+2. O servidor:
+
+   * recebe o PDF
+   * extrai o texto
+   * envia o conteúdo para o ChatGPT
+   * recebe um relatório estruturado gerado pela IA
+3. O relatório é enviado:
+
+   * por **e-mail**
+   * via **WhatsApp**
+4. O arquivo é apagado do servidor.
+
+---
+
+## 🛠️ 3. Tecnologias Utilizadas
+
+* **Node.js + Express**
+* **Multer** (upload de arquivos)
+* **pdf-parse** (leitura de PDFs)
+* **OpenAI API**
+* **Nodemailer** (envio de e-mails)
+* **Meta WhatsApp API**
+* **Axios**
+
+---
+
+## 📁 4. Estrutura do Projeto
+
+```
+/uploads           # PDFs temporários
+serverOpenAi.cjs   # Fluxo usando ChatGPT + e-mail
+serverOllama.cjs   # Versão alternativa (IA local)
+package.json
+README.md
+```
+
+---
+
+## 🚀 5. Como Rodar o Projeto
+
+### 1. Instale as dependências:
+
+```bash
+git clone https://github.com/RomuloLB28/projeto-relatorio-backend
+```
+
+```bash
+npm install
+```
+
+### 2. Configure as variáveis (API Keys)
+
+Edite dentro do código:
+
+* `apiKey` → chave da OpenAI
+* `token` → chave da API do WhatsApp
+* Email e senha de app do Gmail para o Nodemailer
+
+### 3. Inicie o servidor:
+
+```bash
+node serverOpenAi.cjs
+```
+
+Servidor disponível em:
+
+```
+http://localhost:3001
+```
+
+---
+
+## 📬 6. Endpoint Principal
+
+### **POST /send-email**
+
+Envia relatório por e-mail e WhatsApp.
+
+### **Body (multipart/form-data)**:
+
+| Campo | Tipo   | Obrigatório | Descrição                    |
+| ----- | ------ | ----------- | ---------------------------- |
+| file  | PDF    | ✔           | Arquivo enviado pelo usuário |
+| email | string | ✔           | E-mail para envio            |
+| tel   | string | ✔           | Número no WhatsApp           |
+
+---
+
+## 📦 7. Exemplo de Resposta
+
+```json
+{
+  "success": true,
+  "message": "Relatório enviado com sucesso!"
+}
+```
